@@ -31,7 +31,14 @@ def save_crops(crops, out_dir, frame_number):
             print("couldn't write", os.path.join(out_dir, f"{frame_number}_{i}.jpg"))
 
 
-def detect_cars(cap: cv2.VideoCapture, start_pos, out_dir):
+def detect_cars(cap: cv2.VideoCapture, start_pos: int, out_dir: str)->None:
+    """
+    This function uses YoloV5 model to generate car crops
+    :param cap: video object
+    :param start_pos: start position
+    :param out_dir: output dir
+    :return:
+    """
     DETECTOR = torch.hub.load('ultralytics/yolov5', 'custom', path=DETECTOR_PATH)
     cap.set(cv2.CAP_PROP_POS_FRAMES, start_pos)
     counter = 0

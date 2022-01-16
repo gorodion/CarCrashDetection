@@ -16,7 +16,7 @@ predictions = []
 logger = init_logger("Car accident detection")
 
 
-def detect_accedent(cap):
+def detect_accedent(cap: cv2.VideoCapture):
     ACCIDENT_CLF = ResNetTCN()
     ACCIDENT_CLF.load_state_dict(torch.load(ACCIDENT_CLF_PATH, map_location=DEVICE)['model_state_dict'])
     ACCIDENT_CLF.eval()
@@ -53,7 +53,13 @@ def detect_accedent(cap):
     return is_accident, cur_frame
 
 
-def process_video(vid_path: str, dirname: str):
+def process_video(vid_path: str, dirname: str)->None:
+    """
+    This function generates prediction for a single video
+    :param vid_path: path to video
+    :param dirname: directory to save crops
+    :return: prediction
+    """
     cap = cv2.VideoCapture(vid_path)
     assert cap.isOpened(), f'Video {vid_path} is not opened'
     is_accident, cur_frame = detect_accedent(cap)

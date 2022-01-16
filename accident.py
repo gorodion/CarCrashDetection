@@ -170,6 +170,12 @@ def predict_sample(model, X):
 
 
 def predict_accident(model, frames):
+    """
+    This function predicts if there was an accedent on a video
+    :param model: model
+    :param frames: video frames
+    :return: label, 1 for accedents 0 for ordinary videos
+    """
     assert len(frames) == NFRAMES
     frames = [TRANSFORMS(image=frame)['image'] for frame in frames]
     frames = torch.stack(frames)[None]
