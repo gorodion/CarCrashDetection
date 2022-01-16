@@ -11,7 +11,7 @@ from CarsClassifier import predict_emergency, CarsDatasetInference, Densenet169
 from MyFancyLogger import init_logger
 
 model = Densenet169()
-model.load_state_dict(torch.load(CLF_WEIGHTS, map_location=torch.device('cpu')))
+model.load_state_dict(torch.load(CLF_WEIGHTS, map_location=torch.device(DEVICE)))
 model = model.to(DEVICE)
 model.eval()
 paths = []
@@ -76,10 +76,6 @@ if __name__ == "__main__":
     assert os.path.isdir(args.path), "Given path is not a directory"
     files = glob.glob(glob.escape(args.path) + "/*.mp4")
     # Init model for emergency cars classification
-
-    logger = init_logger("Final prediction")
-    paths = []
-    predictions = []
     for file in files:
         save_to = os.path.basename(file).split('.')[0]
         process_video(file, save_to)
