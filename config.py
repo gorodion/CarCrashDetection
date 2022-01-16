@@ -9,7 +9,7 @@ ACCIDENT_CLF_PATH = '/home/gorodion/dtp/logs/checkpoints/best.pth'
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 TRESHOLD = 0.002
-CLF_WEIGHTS = "/home/gorodion/dtp/Densenet169_largeVal.pth"
+CLF_WEIGHTS = "/home/gorodion/dtp/Densenet169.pth"
 IMG_SIZE = 224
 BATCH_SIZE = 4
 L = 3
