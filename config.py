@@ -13,3 +13,7 @@ CLF_WEIGHTS = "./models/Densenet169.pth"
 IMG_SIZE = 224
 BATCH_SIZE = 4
 L = 10
+
+DETECTOR_PATH = './models/X-704.pt'
+DETECTOR_THR = 0.3
+TARGET_CLASSES = [0, 3, 4]
