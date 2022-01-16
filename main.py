@@ -11,8 +11,9 @@ from CarsClassifier import predict_emergency, CarsDatasetInference, Densenet169
 from MyFancyLogger import init_logger
 
 model = Densenet169()
-model = model.to(DEVICE)
 model.load_state_dict(torch.load(CLF_WEIGHTS, map_location=torch.device('cpu')))
+model = model.to(DEVICE)
+model.eval()
 paths = []
 predictions = []
 
@@ -60,6 +61,8 @@ def process_video(vid_path: str, dirname: str):
         if is_emergency:
             logger.warn('accident found')
             predictions.append(1)
+        else:
+            predictions.append(0)
     else:
         logger.info('no accident found')
         predictions.append(0)
