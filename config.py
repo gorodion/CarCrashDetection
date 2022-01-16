@@ -7,7 +7,7 @@ DETECTOR_PATH = './models/X-704.pt'
 NFRAMES = 300
 STRIDE = 150
 CAR_DET_INTERVAL = 25
-ACCIDENT_THR = 0.7
+ACCIDENT_THR = 0.5
 
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
