@@ -163,20 +163,16 @@ class ResNetTCN(nn.Module):
         X = self.tcn(X)
         return X
 
-ACCIDENT_CLF = ResNetTCN()
-ACCIDENT_CLF.load_state_dict(torch.load(ACCIDENT_CLF_PATH, map_location=DEVICE)['model_state_dict'])
-ACCIDENT_CLF.eval()
-ACCIDENT_CLF.to(DEVICE)
 
 @torch.no_grad()
 def predict_sample(model, X):
     return model(X.cuda()).cpu().sigmoid().item()
 
 
-def predict_accident(frames):
+def predict_accident(model, frames):
     assert len(frames) == NFRAMES
     frames = [TRANSFORMS(image=frame)['image'] for frame in frames]
     frames = torch.stack(frames)[None]
-    prob = predict_sample(ACCIDENT_CLF, frames)
+    prob = predict_sample(model, frames)
     print('accident confidence:', prob)
     return prob > ACCIDENT_THR
