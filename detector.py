@@ -42,3 +42,4 @@ def detect_cars(cap: cv2.VideoCapture, start_pos, out_dir):
         if counter % CAR_DET_INTERVAL == 0:
             crops = detect(frame)
             save_crops(crops, out_dir, counter)
+        counter += 1
