@@ -2,14 +2,19 @@ import argparse
 import os
 import glob
 import cv2
-import logging
-import torch
+import pandas as pd
 from collections import deque
 from config import *
 from accident import predict_accident
 from detector import detect_cars
 from CarsClassifier import predict_emergency, CarsDatasetInference, Densenet169
 from MyFancyLogger import init_logger
+
+model = Densenet169()
+model = model.to(DEVICE)
+model.load_state_dict(torch.load(CLF_WEIGHTS, map_location=torch.device('cpu')))
+paths = []
+predictions = []
 
 
 def process_video(vid_path: str, dirname: str):
@@ -50,11 +55,14 @@ def process_video(vid_path: str, dirname: str):
     if is_accident:
         start_frame = cur_frame - STRIDE # from the middle of interval
         detect_cars(cap, start_frame, dirname)
-        is_emergency = predict_emergency(dirname)
+        ds = CarsDatasetInference(dirname)
+        is_emergency = predict_emergency(model, ds, TRESHOLD)
         if is_emergency:
             logger.warn('accident found')
+            predictions.append(1)
     else:
         logger.info('no accident found')
+        predictions.append(0)
     cap.release()
 
 
@@ -65,15 +73,14 @@ if __name__ == "__main__":
     assert os.path.isdir(args.path), "Given path is not a directory"
     files = glob.glob(glob.escape(args.path) + "/*.mp4")
     # Init model for emergency cars classification
-    model = Densenet169()
-    model = model.to(DEVICE)
-    model.load_state_dict(torch.load(CLF_WEIGHTS, map_location=torch.device('cpu')))
 
+    logger = init_logger("Final prediction")
+    paths = []
+    predictions = []
     for file in files:
         save_to = os.path.basename(file).split('.')[0]
         process_video(file, save_to)
+        paths.append(file)
+    final_predictions = pd.DataFrame(data=zip(paths, predictions), columns=["path", "prediction"])
+    final_predictions.to_csv(PREDICTIONS_CSV, index=False)
 
-    # PART 3
-
-    ds = CarsDatasetInference("videos")
-    predict_emergency(model, ds, TRESHOLD)

@@ -60,7 +60,7 @@ def predict_emergency(model, dataset, threshold):
     model.eval()
     indices = list(range(len(dataset)))
     testset = torch.utils.data.Subset(dataset, indices)
-    num_workers = 0#mp.cpu_count()
+    num_workers = mp.cpu_count()
 
     testloader = torch.utils.data.DataLoader(testset, batch_size=BATCH_SIZE,
                                            num_workers=num_workers)

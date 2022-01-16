@@ -18,3 +18,5 @@ L = 10
 DETECTOR_PATH = './models/X-704.pt'
 DETECTOR_THR = 0.3
 TARGET_CLASSES = [0, 3, 4]
+
+PREDICTIONS_CSV = "predictions.csv"
