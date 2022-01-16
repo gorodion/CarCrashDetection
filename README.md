@@ -1,4 +1,6 @@
 # CarCrashDetection
+*Please, note that our models require a lot of memory, so running on Google Colab is a must*
+
 In order to run our model, please, do the following:
 * Install the requirements `python -m pip install -r requirements.txt`
 * Download pretrained models from the [folder](https://drive.google.com/drive/folders/1sZV0zNi0Av7DVZf88DUgmu4LKVdimdHD?usp=sharing) (clickable)
