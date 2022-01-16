@@ -75,7 +75,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
     assert os.path.isdir(args.path), "Given path is not a directory"
     files = glob.glob(glob.escape(args.path) + "/*.mp4")
-    # Init model for emergency cars classification
     for file in files:
         save_to = os.path.basename(file).split('.')[0]
         process_video(file, save_to)
