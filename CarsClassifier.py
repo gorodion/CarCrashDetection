@@ -47,13 +47,13 @@ class Densenet169(nn.Module):
         return self.pretrained_model(x)
 
 
-def notify(predictions, paths):
-    logger = init_logger("Cars classification")
-    for i in range(len(predictions)):
-        if predictions[i] == 1:
-            logger.warning(f"{paths[i]}: спец. машина")
-        else:
-            logger.info(f"{paths[i]}: обыкновенная машина")
+# def notify(predictions, paths):
+#     logger = init_logger("Cars classification")
+    # for i in range(len(predictions)):
+        # if predictions[i] == 1:
+        #     logger.warning(f"{paths[i]}: спец. машина")
+        # else:
+        #     logger.info(f"{paths[i]}: обыкновенная машина")
 
 
 def predict_emergency(model, dataset, threshold):
@@ -76,7 +76,7 @@ def predict_emergency(model, dataset, threshold):
                 continue
             total_preds.extend(outputs.tolist())
             total_paths.extend(paths)
-    notify(total_preds, total_paths)
+    # notify(total_preds, total_paths)
     if sum(total_preds) >= L:
         return 1
     return 0

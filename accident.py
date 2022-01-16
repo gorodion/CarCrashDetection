@@ -166,6 +166,7 @@ class ResNetTCN(nn.Module):
 ACCIDENT_CLF = ResNetTCN()
 ACCIDENT_CLF.load_state_dict(torch.load(ACCIDENT_CLF_PATH, map_location=DEVICE)['model_state_dict'])
 ACCIDENT_CLF.eval()
+ACCIDENT_CLF.to(DEVICE)
 
 @torch.no_grad()
 def predict_sample(model, X):
@@ -177,5 +178,5 @@ def predict_accident(frames):
     frames = [TRANSFORMS(image=frame)['image'] for frame in frames]
     frames = torch.stack(frames)[None]
     prob = predict_sample(ACCIDENT_CLF, frames)
-    print('Уверенность в аварии:', prob)
+    print('accident confidence:', prob)
     return prob > ACCIDENT_THR

@@ -29,7 +29,10 @@ def detect(frame):  # TODO resize ?
 
 def save_crops(crops, out_dir, frame_number):
     for i, crop in enumerate(crops):
-        cv2.imwrite(os.path.join(out_dir, f"{frame_number}_{i}.jpg"), crop)
+        out_path = os.path.join(out_dir, f"{frame_number}_{i}.jpg")
+        ret = cv2.imwrite(out_path, crop)
+        if not ret:
+            print("couldn't write", os.path.join(out_dir, f"{frame_number}_{i}.jpg"))
 
 
 def detect_cars(cap: cv2.VideoCapture, start_pos, out_dir):
