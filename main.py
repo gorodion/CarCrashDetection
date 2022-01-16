@@ -6,13 +6,13 @@ import logging
 import torch
 from collections import deque
 from config import *
-#from accident import predict_accident
+from accident import predict_accident
 from detector import detect_cars
 from CarsClassifier import predict_emergency, CarsDatasetInference, Densenet169
 from MyFancyLogger import init_logger
 
 
-def process_video(vid_path: str):
+def process_video(vid_path: str, dirname: str):
     logger = init_logger("Car accident detection")
     cap = cv2.VideoCapture(vid_path)
     assert cap.isOpened(), f'Video {vid_path} is not opened'
@@ -49,12 +49,13 @@ def process_video(vid_path: str):
 
     if is_accident:
         start_frame = cur_frame - STRIDE # from the middle of interval
-        dirname = detect_cars(cap, start_frame)
+        detect_cars(cap, start_frame, dirname)
         is_emergency = predict_emergency(dirname)
         if is_emergency:
             logger.warn('accident found')
     else:
         logger.info('no accident found')
+    cap.release()
 
 
 if __name__ == "__main__":
@@ -69,7 +70,8 @@ if __name__ == "__main__":
     model.load_state_dict(torch.load(CLF_WEIGHTS, map_location=torch.device('cpu')))
 
     for file in files:
-        pass
+        save_to = os.path.basename(file).split('.')[0]
+        process_video(file, save_to)
 
     # PART 3
 
