@@ -17,7 +17,6 @@ from MyFancyLogger import init_logger
 from config import *
 
 
-
 class CarsDatasetInference(Dataset):
     def __init__(self, root_dir):
         self.files = glob.glob(glob.escape(root_dir) + "/*.jpg")
@@ -34,7 +33,6 @@ class CarsDatasetInference(Dataset):
         image = Image.open(path)
         if self.transform:
             image = self.transform(image)
-        print(path, "\n\n\n")
         return image, path
 
 
@@ -78,8 +76,7 @@ def predict_emergency(model, dataset, threshold):
                 continue
             total_preds.extend(outputs.tolist())
             total_paths.extend(paths)
-    print(total_preds)
     notify(total_preds, total_paths)
-    if sum(total_preds) > L:
+    if sum(total_preds) >= L:
         return 1
     return 0
