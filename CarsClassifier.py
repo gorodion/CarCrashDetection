@@ -13,14 +13,16 @@ import cv2 as cv
 from tqdm import tqdm
 import multiprocessing as mp
 import logging
+from MyFancyLogger import CustomFormatter
 
 IMG_SIZE = 224
 BATCH_SIZE = 4
 L = 10
 
+
 class CarsDatasetInference(Dataset):
     def __init__(self, root_dir):
-        self.files = glob.glob(glob.escape(root_dir) + "/*.jpeg")
+        self.files = glob.glob(glob.escape(root_dir) + "/*.jpg")
         self.transform = transforms.Compose([
                 transforms.Resize((IMG_SIZE, IMG_SIZE)),
                 transforms.ToTensor(),
@@ -34,6 +36,7 @@ class CarsDatasetInference(Dataset):
         image = Image.open(path)
         if self.transform:
             image = self.transform(image)
+        print(path, "\n\n\n")
         return image, path
 
 
@@ -49,14 +52,21 @@ class Densenet169(nn.Module):
 
 
 def notify(predictions, paths):
+    logger = logging.getLogger("Cars classification")
+    logger.setLevel(logging.DEBUG)
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.DEBUG)
+    ch.setFormatter(CustomFormatter())
+    logger.addHandler(ch)
     for i in range(len(predictions)):
         if predictions[i] == 1:
-            logging.warning(f"{paths[i]}: спец. машина")
+            logger.warning(f"{paths[i]}: спец. машина")
         else:
-            logging.log(f"{paths[i]}: обыкновенная машина")
+            logger.info(f"{paths[i]}: обыкновенная машина")
 
 
 def predict_emergency(model, dataset, threshold):
+    model.eval()
     indices = list(range(len(dataset)))
     testset = torch.utils.data.Subset(dataset, indices)
     num_workers = mp.cpu_count()
@@ -76,6 +86,7 @@ def predict_emergency(model, dataset, threshold):
                 continue
             total_preds.extend(outputs.tolist())
             total_paths.extend(paths)
+    print(total_preds)
     notify(total_preds, total_paths)
     if sum(total_preds) > L:
         return 1
