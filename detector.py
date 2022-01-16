@@ -17,7 +17,7 @@ def extract_crops(frame, bboxes):
 
 
 def detect(frame):  # TODO resize ?
-    results = DETECTOR([frame])
+    results = DETECTOR([frame[..., ::-1]])
     predicts = results.xyxy[0].cpu().numpy()
     predicts = predicts[predicts[:, 4] > DETECTOR_THR]
     predicts = predicts[np.isin(predicts[:, -1], TARGET_CLASSES)]
