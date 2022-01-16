@@ -15,11 +15,13 @@ TRANSFORMS = albu.Compose([
 
 ACCIDENT_CLF = torch.load(ACCIDENT_CLF_PATH, map_location=DEVICE).eval()
 
+
 @torch.no_grad()
 def predict_sample(model, X):
     return model(X.cuda()).cpu().sigmoid().item()
 
-def predict_accident(frames: deque):
+
+def predict_accident(frames):
     assert len(frames) == NFRAMES
     frames = [TRANSFORMS(image=frame)['image'] for frame in frames]
     frames = torch.stack(frames)[None]

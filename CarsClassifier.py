@@ -13,11 +13,9 @@ import cv2 as cv
 from tqdm import tqdm
 import multiprocessing as mp
 import logging
-from MyFancyLogger import CustomFormatter
+from MyFancyLogger import init_logger
+from config import *
 
-IMG_SIZE = 224
-BATCH_SIZE = 4
-L = 10
 
 
 class CarsDatasetInference(Dataset):
@@ -52,12 +50,7 @@ class Densenet169(nn.Module):
 
 
 def notify(predictions, paths):
-    logger = logging.getLogger("Cars classification")
-    logger.setLevel(logging.DEBUG)
-    ch = logging.StreamHandler()
-    ch.setLevel(logging.DEBUG)
-    ch.setFormatter(CustomFormatter())
-    logger.addHandler(ch)
+    logger = init_logger("Cars classification")
     for i in range(len(predictions)):
         if predictions[i] == 1:
             logger.warning(f"{paths[i]}: спец. машина")
@@ -69,15 +62,14 @@ def predict_emergency(model, dataset, threshold):
     model.eval()
     indices = list(range(len(dataset)))
     testset = torch.utils.data.Subset(dataset, indices)
-    num_workers = mp.cpu_count()
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    num_workers = 0#mp.cpu_count()
 
     testloader = torch.utils.data.DataLoader(testset, batch_size=BATCH_SIZE,
                                            num_workers=num_workers)
     total_preds = []
     total_paths = []
     for inputs, paths in testloader:
-        inputs = inputs.to(device)
+        inputs = inputs.to(DEVICE)
 
         with torch.no_grad():
             outputs = model(inputs).sigmoid().squeeze().detach().cpu().numpy()
