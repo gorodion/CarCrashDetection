@@ -1,6 +1,6 @@
 import torch
 
-ACCIDENT_CLF_PATH = '/home/gorodion/dtp/best.pth'
+ACCIDENT_CLF_PATH = '/home/gorodion/dtp/logs/checkpoints/best.pth'
 
 
 NFRAMES = 300

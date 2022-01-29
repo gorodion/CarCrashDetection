@@ -1,0 +1,17 @@
+/home/gorodion/dtp/test1/3.mp4: found accident on 00:00-0:10	saved to: accident_3.mp4
+/home/gorodion/dtp/test1/3.mp4: accident found
+/home/gorodion/dtp/test1/8.mp4: found accident on 00:00-0:10	saved to: accident_8.mp4
+/home/gorodion/dtp/test1/8.mp4: accident found
+/home/gorodion/dtp/test1/1.mp4: found accident on 00:00-0:10	saved to: accident_1.mp4
+/home/gorodion/dtp/test1/1.mp4: accident found
+/home/gorodion/dtp/test1/6.mp4: found accident on 00:00-0:10	saved to: accident_6.mp4
+/home/gorodion/dtp/test1/6.mp4: accident found
+/home/gorodion/dtp/test1/7.mp4: found accident on 00:00-0:10	saved to: accident_7.mp4
+/home/gorodion/dtp/test1/7.mp4: accident found
+/home/gorodion/dtp/test1/2.mp4: no accident found
+/home/gorodion/dtp/test1/4.mp4: no accident found
+/home/gorodion/dtp/test1/10.mp4: found accident on 00:10-0:20	saved to: accident_10.mp4
+/home/gorodion/dtp/test1/10.mp4: accident found
+/home/gorodion/dtp/test1/5.mp4: found accident on 00:00-0:10	saved to: accident_5.mp4
+/home/gorodion/dtp/test1/5.mp4: accident found
+/home/gorodion/dtp/test1/9.mp4: no accident found
