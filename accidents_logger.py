@@ -14,7 +14,7 @@ def save_accident(frames: deque, out_dir: str, fps: float)->None:
     """
     shape = frames[0].shape
     fwidth, fheight = shape[0], shape[1]
-    fourcc = cv2.VideoWriter_fourcc(*'XVID')
+    fourcc = cv2.VideoWriter_fourcc(*'MP4V')
     out = cv2.VideoWriter(out_dir, fourcc, fps, (fwidth, fheight))
     for frame in frames:
         out.write(frame)

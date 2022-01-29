@@ -44,7 +44,7 @@ def detect_accident(cap: cv2.VideoCapture, video_path: str,
                 end_secs = int((cur_frame + NFRAMES) / fps)
                 end_mm = end_secs // 60
                 end_ss = end_secs % 60
-                resulting_path = f'accident_{save_to}.avi'
+                resulting_path = f'accident_{save_to}.mp4'
                 print(f'{video_path}: found accident on {start_mm:02d}:{start_ss:02d}-{end_mm}:{end_ss}\tsaved to: {resulting_path}')
                 save_accident(frames, resulting_path, fps)
                 break
