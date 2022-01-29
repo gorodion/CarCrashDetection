@@ -6,7 +6,7 @@ ACCIDENT_CLF_PATH = '/home/gorodion/dtp/best.pth'
 NFRAMES = 300
 STRIDE = 150
 CAR_DET_INTERVAL = 25
-ACCIDENT_THR = 0.94
+ACCIDENT_THR = 0.9
 
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
