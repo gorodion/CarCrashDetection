@@ -6,17 +6,17 @@ import pandas as pd
 from collections import deque
 from config import *
 from accident import predict_accident
-from detector import detect_cars
-from CarsClassifier import predict_emergency, CarsDatasetInference, Densenet169
-from MyFancyLogger import init_logger
 from accident import ResNetTCN
+import sys
+from accidents_logger import save_accident
 
 paths = []
 predictions = []
-logger = init_logger("Car accident detection")
+sys.stdout = open('logs.txt', 'w')
 
 
-def detect_accedent(cap: cv2.VideoCapture):
+def detect_accident(cap: cv2.VideoCapture, video_path: str,
+                     save_to: str):
     ACCIDENT_CLF = ResNetTCN()
     ACCIDENT_CLF.load_state_dict(torch.load(ACCIDENT_CLF_PATH, map_location=DEVICE)['model_state_dict'])
     ACCIDENT_CLF.eval()
@@ -35,19 +35,21 @@ def detect_accedent(cap: cv2.VideoCapture):
         new_frames += 1
         cur_frame += 1
         if len(frames) == NFRAMES and new_frames >= STRIDE:
-            logger.info(f'current frame {cur_frame}')  ###
             new_frames = 0
             is_accident = predict_accident(ACCIDENT_CLF, frames)
             if is_accident:
-                secs = int(cur_frame / fps)
-                mm = secs // 60
-                ss = secs % 60
-                logger.warn(f'found accident on {mm:02d}:{ss:02d}')
+                start_secs = int(cur_frame / fps)
+                start_mm = start_secs // 60
+                start_ss = start_secs % 60
+                end_secs = int((cur_frame + NFRAMES) / fps)
+                end_mm = end_secs // 60
+                end_ss = end_secs % 60
+                resulting_path = f'accident_{save_to}.avi'
+                print(f'{video_path}: found accident on {start_mm:02d}:{start_ss:02d}-{end_mm}:{end_ss}\tsaved to: {resulting_path}')
+                save_accident(frames, resulting_path, fps)
                 break
-
     len_ = len(frames)
     if len_ < NFRAMES:
-        logger.info(f'short video {int(len_ / fps)} seconds')
         frames += [frames[-1]] * (NFRAMES - len_)
         is_accident = predict_accident(ACCIDENT_CLF, frames)
     return is_accident, cur_frame
@@ -62,24 +64,12 @@ def process_video(vid_path: str, dirname: str)->None:
     """
     cap = cv2.VideoCapture(vid_path)
     assert cap.isOpened(), f'Video {vid_path} is not opened'
-    is_accident, cur_frame = detect_accedent(cap)
+    is_accident, cur_frame = detect_accident(cap, vid_path, dirname)
     if is_accident:
-        logger.warn('detecting cars')
-        start_frame = cur_frame - STRIDE # from the middle of interval
-        detect_cars(cap, start_frame, dirname)
-        ds = CarsDatasetInference(dirname)
-        model = Densenet169()
-        model.load_state_dict(torch.load(CLF_WEIGHTS, map_location=torch.device(DEVICE)))
-        model = model.to(DEVICE)
-        model.eval()
-        is_emergency = predict_emergency(model, ds, TRESHOLD)
-        if is_emergency:
-            logger.warn('accident and emergency found')
-            predictions.append(1)
-        else:
-            predictions.append(0)
+        print(f'{vid_path}: accident found')
+        predictions.append(1)
     else:
-        logger.info('no accident found')
+        print(f'{vid_path}: no accident found')
         predictions.append(0)
     cap.release()
 
@@ -91,7 +81,6 @@ if __name__ == "__main__":
     assert os.path.isdir(args.path), "Given path is not a directory"
     files = glob.glob(args.path + "/*.mp4")
     for file in files:
-        logger.info(f'processing {file}')
         save_to = os.path.basename(file).split('.')[0]
         os.makedirs(save_to, exist_ok=True)
         process_video(file, save_to)

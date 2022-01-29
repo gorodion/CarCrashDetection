@@ -1,8 +1,7 @@
 import torch
 
 ACCIDENT_CLF_PATH = './models/best.pth'
-CLF_WEIGHTS = "./models/Densenet169.pth"
-DETECTOR_PATH = './models/X-704.pt'
+
 
 NFRAMES = 300
 STRIDE = 150
