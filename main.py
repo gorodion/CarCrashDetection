@@ -7,12 +7,11 @@ from collections import deque
 from config import *
 from accident import predict_accident
 from accident import ResNetTCN
-import sys
 from accidents_logger import save_accident
 
 paths = []
 predictions = []
-sys.stdout = open('logs.txt', 'w')
+log = open('logs.txt', 'w')
 ACCIDENT_CLF = ResNetTCN()
 ACCIDENT_CLF.load_state_dict(torch.load(ACCIDENT_CLF_PATH, map_location=DEVICE)['model_state_dict'])
 ACCIDENT_CLF.eval()
@@ -64,12 +63,13 @@ def process_video(vid_path: str)->None:
         end_mm = end_secs // 60
         end_ss = end_secs % 60
         resulting_path = f'accident_{save_to}.mp4'
-        print(f'{vid_path}: found accident on {start_mm:02d}:{start_ss:02d}-{end_mm}:{end_ss}\tsaved to: {resulting_path}')
+        print(f'{vid_path}: found accident on {start_mm:02d}:{start_ss:02d}-{end_mm}:{end_ss}\tsaved to: {resulting_path}',
+              file=log)
         save_accident(frames, resulting_path, fps)
-        print(f'{vid_path}: accident found')
+        print(f'{vid_path}: accident found', file=log)
         predictions.append(1)
     else:
-        print(f'{vid_path}: no accident found')
+        print(f'{vid_path}: no accident found', file=log)
         predictions.append(0)
     cap.release()
 
