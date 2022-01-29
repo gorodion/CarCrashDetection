@@ -54,6 +54,7 @@ def process_video(vid_path: str)->None:
     fps = int(cap.get(cv2.CAP_PROP_FPS))
     assert cap.isOpened(), f'Video {vid_path} is not opened'
     is_accident, cur_frame, frames = detect_accident(cap)
+    cur_frame = max(cur_frame - NFRAMES, 0)
     if is_accident:
         save_to = os.path.basename(vid_path).split('.')[0]
         start_secs = int(cur_frame / fps)
