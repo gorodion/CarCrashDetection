@@ -85,4 +85,5 @@ if __name__ == "__main__":
         paths.append(file)
     final_predictions = pd.DataFrame(data=zip(paths, predictions), columns=["path", "prediction"])
     final_predictions.to_csv(PREDICTIONS_CSV, index=False)
+    log.close()
 
